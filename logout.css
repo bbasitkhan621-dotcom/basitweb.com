@@ -1,0 +1,35 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Space Grotesk', monospace;
+    background: #050510;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-container {
+    text-align: center;
+    animation: fadeOut 2s ease;
+}
+
+.logout-icon {
+    font-size: 5rem;
+    color: #00f3ff;
+    margin-bottom: 20px;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}

@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | 3D Ultra Platform</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00f3ff;
+            --secondary: #8a2be2;
+            --accent: #ff006e;
+            --dark: #0a0a1a;
+            --darker: #050510;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --success: #00ff88;
+            --danger: #ff006e;
+            --warning: #ffaa00;
+        }
+
+        body {
+            font-family: 'Space Grotesk', monospace;
+            background: var(--darker);
+            color: white;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar-ultra {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            background: rgba(5, 5, 16, 0.95);
+            backdrop-filter: blur(20px);
+            z-index: 10000;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .btn-back {
+            background: transparent;
+            border: 1px solid var(--primary);
+            padding: 10px 25px;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-back:hover {
+            background: var(--primary);
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+        }
+
+        /* Main Container */
+        .edit-container {
+            max-width: 1200px;
+            margin: 100px auto 50px;
+            padding: 20px;
+        }
+
+        /* Profile Header */
+        .profile-header {
+            position: relative;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .cover-photo {
+            position: relative;
+            height: 250px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            overflow: hidden;
+        }
+
+        .cover-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .cover-upload {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cover-upload:hover {
+            background: var(--primary);
+        }
+
+        .profile-avatar {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: -75px auto 20px;
+            border-radius: 50%;
+            border: 4px solid var(--primary);
+            overflow: hidden;
+            background: var(--darker);
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-upload {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.8);
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 12px;
+        }
+
+        .avatar-upload:hover {
+            background: var(--primary);
+        }
+
+        /* Form Sections */
+        .form-section {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            color: white;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        /* File Upload Area */
+        .file-upload-area {
+            border: 2px dashed var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .file-upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(0, 243, 255, 0.05);
+        }
+
+        .file-upload-area i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .file-list {
+            margin-top: 20px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .file-item i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        .file-item .file-size {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .delete-file {
+            color: var(--danger);
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        /* Skills Tags */
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 5px 15px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+        .skill-tag i {
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .skill-tag i:hover {
+            opacity: 1;
+        }
+
+        .add-skill {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .add-skill input {
+            flex: 1;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            color: white;
+        }
+
+        /* Social Links */
+        .social-link-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .social-link-item select {
+            width: 120px;
+        }
+
+        .social-link-item input {
+            flex: 1;
+        }
+
+        .remove-social {
+            color: var(--danger);
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .add-social {
+            margin-top: 10px;
+        }
+
+        /* Buttons */
+        .btn-save {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            color: white;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            z-index: 100000;
+            animation: slideIn 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .navbar-ultra {
+                padding: 15px 20px;
+            }
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            .profile-header {
+                margin-top: 60px;
+            }
+            .cover-photo {
+                height: 150px;
+            }
+            .profile-avatar {
+                width: 100px;
+                height: 100px;
+                margin-top: -50px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar-ultra">
+    <div class="nav-container">
+        <div class="logo" onclick="window.location.href='index.html'">3D<span>Ultra</span></div>
+        <button class="btn-back" onclick="window.location.href='index.html'">
+            <i class="fas fa-arrow-left"></i> Back to Home
+        </button>
+    </div>
+</nav>
+
+<!-- Edit Container -->
+<div class="edit-container">
+    
+    <!-- Profile Header with Cover & Avatar Upload -->
+    <div class="profile-header">
+        <div class="cover-photo" id="coverPhoto">
+            <img id="coverImage" src="https://via.placeholder.com/1200x250/2a2a3a/ffffff?text=Cover+Photo" alt="Cover">
+            <div class="cover-upload" onclick="document.getElementById('coverInput').click()">
+                <i class="fas fa-camera"></i> Change Cover
+            </div>
+            <input type="file" id="coverInput" accept="image/*" style="display: none;">
+        </div>
+        
+        <div class="profile-avatar">
+            <img id="avatarImage" src="https://via.placeholder.com/150/2a2a3a/ffffff?text=Avatar" alt="Avatar">
+            <div class="avatar-upload" onclick="document.getElementById('avatarInput').click()">
+                <i class="fas fa-camera"></i> Upload
+            </div>
+            <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+        </div>
+    </div>
+    
+    <!-- Basic Information -->
+    <div class="form-section">
+        <div class="section-title">
+            <i class="fas fa-user"></i>
+            <h3>Basic Information</h3>
+        </div>
+        <div class="form-grid">
+            <div class="form-group">
+                <label><i class="fas fa-user-tag"></i> Username *</label>
+                <input type="text" id="username" placeholder="Enter username">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email *</label>
+                <input type="email" id="email" placeholder="Enter email">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Full Name</label>
+                <input type="text" id="fullname" placeholder="Enter full name">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-briefcase"></i> Profession</label>
+                <input type="text" id="profession" placeholder="e.g., Full Stack Developer">
+            </div>
+            <div class="form-group full-width">
+                <label><i class="fas fa-info-circle"></i> Bio</label>
+                <textarea id="bio" placeholder="Tell us about yourself..."></textarea>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-map-marker-alt"></i> Location</label>
+                <input type="text" id="location" placeholder="City, Country">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-globe"></i> Website</label>
+                <input type="url" id="website" placeholder="https://yourwebsite.com">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Skills Section -->
+    <div class="form-section">
+        <div class="section-title">
+            <i class="fas fa-code"></i>
+            <h3>Skills & Expertise</h3>
+        </div>
+        <div class="skills-container" id="skillsContainer"></div>
+        <div class="add-skill">
+            <input type="text" id="newSkill" placeholder="Add a skill (e.g., JavaScript, React, Three.js)">
+            <button class="btn-back" onclick="addSkill()" style="padding: 8px 20px;">Add</button>
+        </div>
+    </div>
+    
+    <!-- Social Links -->
+    <div class="form-section">
+        <div class="section-title">
+            <i class="fas fa-share-alt"></i>
+            <h3>Social Links</h3>
+        </div>
+        <div id="socialLinksContainer"></div>
+        <div class="add-social">
+            <button class="btn-back" onclick="addSocialLink()">
+                <i class="fas fa-plus"></i> Add Social Link
+            </button>
+        </div>
+    </div>
+    
+    <!-- File Upload Section -->
+    <div class="form-section">
+        <div class="section-title">
+            <i class="fas fa-paperclip"></i>
+            <h3>Portfolio Files</h3>
+        </div>
+        
+        <!-- Resume Upload -->
+        <div class="form-group">
+            <label><i class="fas fa-file-pdf"></i> Resume/CV</label>
+            <div class="file-upload-area" onclick="document.getElementById('resumeInput').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Click to upload your resume (PDF, DOC, DOCX)</p>
+                <small>Max file size: 5MB</small>
+            </div>
+            <input type="file" id="resumeInput" accept=".pdf,.doc,.docx" style="display: none;">
+            <div id="resumeList" class="file-list"></div>
+        </div>
+        
+        <!-- Project Files Upload -->
+        <div class="form-group">
+            <label><i class="fas fa-folder-open"></i> Project Files</label>
+            <div class="file-upload-area" onclick="document.getElementById('projectInput').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <p>Click to upload project files (Images, PDFs, ZIP)</p>
+                <small>Max file size: 10MB per file</small>
+            </div>
+            <input type="file" id="projectInput" accept=".jpg,.png,.pdf,.zip" multiple style="display: none;">
+            <div id="projectFilesList" class="file-list"></div>
+        </div>
+    </div>
+    
+    <!-- Save Button -->
+    <button class="btn-save" onclick="saveProfile()">
+        <i class="fas fa-save"></i> Save All Changes
+    </button>
+    
+</div>
+
+<script>
+    // ============ DATA STORAGE ============
+    let userSkills = JSON.parse(localStorage.getItem('userSkills') || '[]');
+    let socialLinks = JSON.parse(localStorage.getItem('socialLinks') || '[]');
+    let resumeFile = localStorage.getItem('resumeFile') || null;
+    let projectFiles = JSON.parse(localStorage.getItem('projectFiles') || '[]');
+    
+    // ============ LOAD SAVED DATA ============
+    function loadSavedData() {
+        // Load basic info
+        document.getElementById('username').value = localStorage.getItem('username') || '';
+        document.getElementById('email').value = localStorage.getItem('email') || '';
+        document.getElementById('fullname').value = localStorage.getItem('fullname') || '';
+        document.getElementById('profession').value = localStorage.getItem('profession') || '';
+        document.getElementById('bio').value = localStorage.getItem('bio') || '';
+        document.getElementById('location').value = localStorage.getItem('location') || '';
+        document.getElementById('website').value = localStorage.getItem('website') || '';
+        
+        // Load avatar and cover
+        const savedAvatar = localStorage.getItem('avatar');
+        if(savedAvatar) {
+            document.getElementById('avatarImage').src = savedAvatar;
+        }
+        
+        const savedCover = localStorage.getItem('coverPhoto');
+        if(savedCover) {
+            document.getElementById('coverImage').src = savedCover;
+        }
+        
+        // Load skills
+        renderSkills();
+        
+        // Load social links
+        renderSocialLinks();
+        
+        // Load files
+        renderResumeFile();
+        renderProjectFiles();
+    }
+    
+    // ============ AVATAR UPLOAD ============
+    document.getElementById('avatarInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const imageUrl = event.target.result;
+                document.getElementById('avatarImage').src = imageUrl;
+                localStorage.setItem('avatar', imageUrl);
+                showNotification('Profile picture uploaded!', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // ============ COVER PHOTO UPLOAD ============
+    document.getElementById('coverInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if(file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const imageUrl = event.target.result;
+                document.getElementById('coverImage').src = imageUrl;
+                localStorage.setItem('coverPhoto', imageUrl);
+                showNotification('Cover photo updated!', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // ============ SKILLS MANAGEMENT ============
+    function renderSkills() {
+        const container = document.getElementById('skillsContainer');
+        container.innerHTML = '';
+        
+        userSkills.forEach((skill, index) => {
+            const skillTag = document.createElement('div');
+            skillTag.className = 'skill-tag';
+            skillTag.innerHTML = `
+                ${skill}
+                <i class="fas fa-times" onclick="removeSkill(${index})"></i>
+            `;
+            container.appendChild(skillTag);
+        });
+    }
+    
+    function addSkill() {
+        const input = document.getElementById('newSkill');
+        const skill = input.value.trim();
+        
+        if(skill && !userSkills.includes(skill)) {
+            userSkills.push(skill);
+            localStorage.setItem('userSkills', JSON.stringify(userSkills));
+            renderSkills();
+            input.value = '';
+            showNotification(`Skill "${skill}" added!`, 'success');
+        } else if(userSkills.includes(skill)) {
+            showNotification('Skill already exists!', 'warning');
+        }
+    }
+    
+    function removeSkill(index) {
+        const removed = userSkills[index];
+        userSkills.splice(index, 1);
+        localStorage.setItem('userSkills', JSON.stringify(userSkills));
+        renderSkills();
+        showNotification(`Skill "${removed}" removed`, 'info');
+    }
+    
+    // ============ SOCIAL LINKS MANAGEMENT ============
+    const socialPlatforms = [
+        { value: 'github', icon: 'fab fa-github', name: 'GitHub' },
+        { value: 'linkedin', icon: 'fab fa-linkedin', name: 'LinkedIn' },
+        { value: 'twitter', icon: 'fab fa-twitter', name: 'Twitter' },
+        { value: 'instagram', icon: 'fab fa-instagram', name: 'Instagram' },
+        { value: 'youtube', icon: 'fab fa-youtube', name: 'YouTube' },
+        { value: 'facebook', icon: 'fab fa-facebook', name: 'Facebook' },
+        { value: 'discord', icon: 'fab fa-discord', name: 'Discord' },
+        { value: 'telegram', icon: 'fab fa-telegram', name: 'Telegram' },
+        { value: 'whatsapp', icon: 'fab fa-whatsapp', name: 'WhatsApp' },
+        { value: 'tiktok', icon: 'fab fa-tiktok', name: 'TikTok' }
+    ];
+    
+    function renderSocialLinks() {
+        const container = document.getElementById('socialLinksContainer');
+        container.innerHTML = '';
+        
+        if(socialLinks.length === 0) {
+            container.innerHTML = '<p style="color: rgba(255,255,255,0.5); text-align: center;">No social links added yet. Click "Add Social Link" to get started.</p>';
+        }
+        
+        socialLinks.forEach((link, index) => {
+            const platform = socialPlatforms.find(p => p.value === link.platform);
+            const icon = platform ? platform.icon : 'fab fa-link';
+            
+            const div = document.createElement('div');
+            div.className = 'social-link-item';
+            div.innerHTML = `
+                <select onchange="updateSocialPlatform(${index}, this.value)">
+                    ${socialPlatforms.map(p => `
+                        <option value="${p.value}" ${link.platform === p.value ? 'selected' : ''}>
+                            ${p.name}
+                        </option>
+                    `).join('')}
+                </select>
+                <input type="url" id="socialUrl_${index}" value="${link.url}" placeholder="https://...">
+                <i class="fas fa-trash remove-social" onclick="removeSocialLink(${index})"></i>
+            `;
+            container.appendChild(div);
+        });
+    }
+    
+    function addSocialLink() {
+        socialLinks.push({ platform: 'github', url: '' });
+        localStorage.setItem('socialLinks', JSON.stringify(socialLinks));
+        renderSocialLinks();
+    }
+    
+    function updateSocialPlatform(index, platform) {
+        socialLinks[index].platform = platform;
+        localStorage.setItem('socialLinks', JSON.stringify(socialLinks));
+    }
+    
+    function removeSocialLink(index) {
+        socialLinks.splice(index, 1);
+        localStorage.setItem('socialLinks', JSON.stringify(socialLinks));
+        renderSocialLinks();
+        showNotification('Social link removed', 'info');
+    }
+    
+    // ============ FILE UPLOAD HANDLERS ============
+    // Resume Upload
+    document.getElementById('resumeInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if(file) {
+            if(file.size > 5 * 1024 * 1024) {
+                showNotification('File too large! Max 5MB', 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                resumeFile = {
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    data: event.target.result
+                };
+                localStorage.setItem('resumeFile', JSON.stringify(resumeFile));
+                renderResumeFile();
+                showNotification('Resume uploaded successfully!', 'success');
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    function renderResumeFile() {
+        const container = document.getElementById('resumeList');
+        if(resumeFile) {
+            const fileSize = (resumeFile.size / 1024).toFixed(2);
+            container.innerHTML = `
+                <div class="file-item">
+                    <div>
+                        <i class="fas fa-file-pdf"></i>
+                        <strong>${resumeFile.name}</strong>
+                        <span class="file-size">(${fileSize} KB)</span>
+                    </div>
+                    <i class="fas fa-trash delete-file" onclick="deleteResume()"></i>
+                </div>
+            `;
+        } else {
+            container.innerHTML = '<p style="color: rgba(255,255,255,0.5);">No resume uploaded</p>';
+        }
+    }
+    
+    function deleteResume() {
+        resumeFile = null;
+        localStorage.removeItem('resumeFile');
+        renderResumeFile();
+        showNotification('Resume deleted', 'info');
+    }
+    
+    // Project Files Upload
+    document.getElementById('projectInput').addEventListener('change', function(e) {
+        const files = Array.from(e.target.files);
+        
+        files.forEach(file => {
+            if(file.size > 10 * 1024 * 1024) {
+                showNotification(`${file.name} is too large! Max 10MB`, 'error');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                projectFiles.push({
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    data: event.target.result,
+                    uploadDate: new Date().toISOString()
+                });
+                localStorage.setItem('projectFiles', JSON.stringify(projectFiles));
+                renderProjectFiles();
+            };
+            reader.readAsDataURL(file);
+        });
+        
+        showNotification(`${files.length} file(s) uploaded!`, 'success');
+    });
+    
+    function renderProjectFiles() {
+        const container = document.getElementById('projectFilesList');
+        
+        if(projectFiles.length === 0) {
+            container.innerHTML = '<p style="color: rgba(255,255,255,0.5);">No project files uploaded</p>';
+            return;
+        }
+        
+        container.innerHTML = '';
+        projectFiles.forEach((file, index) => {
+            const fileSize = (file.size / 1024).toFixed(2);
+            const fileIcon = file.type.includes('image') ? 'fa-image' : 
+                            (file.type.includes('pdf') ? 'fa-file-pdf' : 'fa-file-archive');
+            
+            const div = document.createElement('div');
+            div.className = 'file-item';
+            div.innerHTML = `
+                <div>
+                    <i class="fas ${fileIcon}"></i>
+                    <strong>${file.name}</strong>
+                    <span class="file-size">(${fileSize} KB)</span>
+                    <small style="display: block; font-size: 10px;">${new Date(file.uploadDate).toLocaleDateString()}</small>
+                </div>
+                <i class="fas fa-trash delete-file" onclick="deleteProjectFile(${index})"></i>
+            `;
+            container.appendChild(div);
+        });
+    }
+    
+    function deleteProjectFile(index) {
+        projectFiles.splice(index, 1);
+        localStorage.setItem('projectFiles', JSON.stringify(projectFiles));
+        renderProjectFiles();
+        showNotification('File deleted', 'info');
+    }
+    
+    // ============ SAVE PROFILE ============
+    function saveProfile() {
+        // Save basic info
+        localStorage.setItem('username', document.getElementById('username').value);
+        localStorage.setItem('email', document.getElementById('email').value);
+        localStorage.setItem('fullname', document.getElementById('fullname').value);
+        localStorage.setItem('profession', document.getElementById('profession').value);
+        localStorage.setItem('bio', document.getElementById('bio').value);
+        localStorage.setItem('location', document.getElementById('location').value);
+        localStorage.setItem('website', document.getElementById('website').value);
+        
+        // Update social links URLs
+        socialLinks.forEach((link, index) => {
+            const urlInput = document.getElementById(`socialUrl_${index}`);
+            if(urlInput) {
+                link.url = urlInput.value;
+            }
+        });
+        localStorage.setItem('socialLinks', JSON.stringify(socialLinks));
+        
+        showNotification('All changes saved successfully!', 'success');
+        
+        // Redirect after 1.5 seconds
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1500);
+    }
+    
+    // ============ NOTIFICATION ============
+    function showNotification(message, type) {
+        const existing = document.querySelector('.notification');
+        if(existing) existing.remove();
+        
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        
+        const colors = {
+            success: 'linear-gradient(135deg, #00ff88, #00cc66)',
+            error: 'linear-gradient(135deg, #ff006e, #cc0055)',
+            warning: 'linear-gradient(135deg, #ffaa00, #cc8800)',
+            info: 'linear-gradient(135deg, var(--primary), var(--secondary))'
+        };
+        
+        notification.style.background = colors[type] || colors.info;
+        notification.innerHTML = message;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateX(400px)';
+            setTimeout(() => notification.remove(), 300);
+        }, 3000);
+    }
+    
+    // ============ INITIALIZE ============
+    document.addEventListener('DOMContentLoaded', () => {
+        loadSavedData();
+    });
+</script>
+</body>
+</html>
